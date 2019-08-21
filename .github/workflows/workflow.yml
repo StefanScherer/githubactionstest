@@ -1,0 +1,15 @@
+name: GitHub Actions test
+
+on: [push]
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Look around
+      run: ls
+    - name: Get some info
+      run: uname -a
