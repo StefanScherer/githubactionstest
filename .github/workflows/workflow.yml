@@ -33,10 +33,10 @@ jobs:
     - uses: actions/checkout@master
     - name: Look around
       run: dir
-    - name: List env
-      run: set
     - name: Test FIPS
       run: powershell -Command [System.Environment]::SetEnvironmentVariable('DOCKER_FIPS', '1', 'Machine')
+    - name: List env
+      run: set
     - name: Restart Docker
       run: |
         net stop docker
