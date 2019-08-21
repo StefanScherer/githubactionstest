@@ -44,6 +44,6 @@ jobs:
     - name: Get docker CLI plugin version
       run: |
         cd "C:\Program Files\Docker\cli-plugins" 
-        docker-app.exe" app version
+        docker-app.exe app version
     - name: Build Docker image
       run: docker build -t http .
