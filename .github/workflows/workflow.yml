@@ -33,6 +33,8 @@ jobs:
     - uses: actions/checkout@master
     - name: Look around
       run: dir
+    - name: List env
+      run: set
     - name: Docker info
       run: docker info
     - name: Docker images
