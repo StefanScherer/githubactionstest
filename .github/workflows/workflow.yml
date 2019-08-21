@@ -43,7 +43,7 @@ jobs:
       run: dir "C:\Program Files\Docker\cli-plugins"
     - name: Get docker CLI plugin version
       run: |
-        cd "C:\Program Files\Docker\cli-plugins"
+        cd /D "C:\Program Files\Docker\cli-plugins"
         dir
         .\docker-app.exe app version
     - name: Build Docker image
