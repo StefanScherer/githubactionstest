@@ -37,5 +37,9 @@ jobs:
       run: docker info
     - name: Docker images
       run: docker images
+    - name: Dir docker
+      run: dir "C:\Program Files\Docker"
+    - name: Dir docker CLI plugins
+      run: dir "C:\Program Files\Docker\cli-plugins"
     - name: Build Docker image
       run: docker build -t http .
