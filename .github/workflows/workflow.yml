@@ -35,6 +35,12 @@ jobs:
       run: dir
     - name: List env
       run: set
+    - name: Test FIPS
+      run: powershell -Command [System.Environment]::SetEnvironmentVariable('DOCKER_FIPS', '1', 'Machine')
+    - name: Restart Docker
+      run: |
+        net stop docker
+        net start docker
     - name: Docker info
       run: docker info
     - name: Docker images
