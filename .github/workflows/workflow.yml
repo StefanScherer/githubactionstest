@@ -13,3 +13,9 @@ jobs:
       run: ls
     - name: Get some info
       run: uname -a
+    - name: Build Docker image
+      run: docker build -t http .
+    - name: Run container
+      run: docker run -d -p 8080:8080 http
+    - name: Test container
+      run: curl http://localhost:8080
