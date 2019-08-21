@@ -41,5 +41,7 @@ jobs:
       run: dir "C:\Program Files\Docker"
     - name: Dir docker CLI plugins
       run: dir "C:\Program Files\Docker\cli-plugins"
+    - name: Get docker CLI plugin version
+      run: "C:\Program Files\Docker\cli-plugins\docker-app.exe" app version
     - name: Build Docker image
       run: docker build -t http .
