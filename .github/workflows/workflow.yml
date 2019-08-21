@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
  
     steps:
+    - uses: actions/checkout@master
     - name: Look around
       run: ls
     - name: Get some info
