@@ -16,6 +16,8 @@ jobs:
       run: echo "$HOME" | cat > file      
     - name: cat file
       run: cat file      
+    - name: Docker version
+      run: docker version
     - name: Docker info
       run: docker info
     - name: Docker images
