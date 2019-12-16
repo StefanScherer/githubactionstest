@@ -12,6 +12,8 @@ jobs:
     - uses: actions/checkout@master
     - name: Look around
       run: ls
+    - name: Print env
+      run: printenv
     - name: Get some info
       run: echo "$HOME" | cat > file      
     - name: cat file
