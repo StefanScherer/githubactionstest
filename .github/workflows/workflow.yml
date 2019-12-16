@@ -15,7 +15,7 @@ jobs:
     - name: Print env
       run: printenv
     - name: Get some info
-      run: echo "$HOME" | cat > file      
+      run: echo ${{ secrets.YOUR_SECRET_NAME }} | cat > file      
     - name: cat file
       run: cat file      
     - name: Docker version
