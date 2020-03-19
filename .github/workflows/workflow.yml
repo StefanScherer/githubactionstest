@@ -1,6 +1,9 @@
 name: GitHub Actions test
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
 
@@ -11,32 +14,5 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Look around
-      run: ls
-    - name: Get some info
-      run: echo "${{ secrets.YOUR_SECRET_NAME }}" | cat > file      
-    - name: cat file
-      run: cat file
-    - name: Run test.sh script
-      run: ./test.sh
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    - name: Docker version
-      run: docker version
-    - name: Docker info
-      run: docker info
-    - name: Docker images
-      run: docker images
-    - name: Build Docker image
-      run: docker build -t http .
-    - name: Run container
-      run: docker run -d -p 8080:8080 http
-    - name: Test container
-      run: curl http://localhost:8080
-    - name: Register QEMU
-      run: docker run --rm --privileged docker/binfmt:66f9012c56a8316f9244ffd7622d7c21c1f6f28d
-    - name: Run Hypriot web server
-      run: docker run -d -p 80:80 hypriot/rpi-busybox-httpd
-    - name: Test ARM container
-      run: curl http://localhost:80
-      
+      run: printenv
+      if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
