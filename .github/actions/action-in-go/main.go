@@ -14,7 +14,6 @@ func main() {
 		githubactions.Fatalf("missing input 'fruit'")
 	}
 	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
-	secretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
 
 	fmt.Println("Got access key: ", accessKey)
 
@@ -23,7 +22,7 @@ func main() {
 		githubactions.Fatalf("missing input 'jsonFile'")
 	}
 
-	file, err := ioutil.ReadFile(jsonFile)
+	_, err := ioutil.ReadFile(jsonFile)
 	if err != nil {
 		exitErrorf("Error reading json file %s, %v", jsonFile, err)
 	}
