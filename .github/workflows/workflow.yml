@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
 
@@ -16,3 +19,11 @@ jobs:
     - name: Look around
       run: printenv
       if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
+    - name: run go action
+      uses: ./.github/actions/action-in-go
+      with:
+        fruit: banana
+        jsonFile: test.json
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
