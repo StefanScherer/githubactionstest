@@ -3,7 +3,10 @@ inputs:
     fruit:
         description: Name of fruit to mask
         required: true
-        
+    jsonFile:
+        description: Name of a JSON file
+        required: true
+            
 runs:
   using: docker
   image: Dockerfile
