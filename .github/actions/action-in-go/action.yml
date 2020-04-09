@@ -1,9 +1,16 @@
 name: My Action
 inputs:
-  secrets:
-    fruit: Name of fruit to mask
-    required: true
-
+    fruit:
+        description: Name of fruit to mask
+        required: true
+    secrets:
+        AWS_ACCESS_KEY_ID:
+            description: AWS access key
+            required: true
+        AWS_SECRET_ACCESS_KEY:
+            description: AWS secret key
+            required: true
+        
 runs:
   using: docker
   image: Dockerfile
