@@ -16,3 +16,7 @@ jobs:
     - name: Look around
       run: printenv
       if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
+    - name: run go action
+      uses: ./.github/actions/action-in-go
+      with:
+        fruit: banana
