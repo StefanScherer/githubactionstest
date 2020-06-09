@@ -7,12 +7,13 @@ on:
 
 jobs:
 
-  build-linux:
+  build-windows:
  
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
  
     steps:
     - uses: actions/checkout@v2
     - name: Look around
-      run: printenv
-      if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
+      run: set
+    - name: Check choco
+      run: choco list -l
