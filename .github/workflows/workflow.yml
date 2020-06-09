@@ -1,18 +1,20 @@
 name: GitHub Actions test
 
-on:
-  push:
-    branches:
-      - master
+on: pull_request
 
 jobs:
 
-  build-linux:
+  build-windows:
  
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
  
     steps:
     - uses: actions/checkout@v2
-    - name: Look around
-      run: printenv
-      if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
+    - name: Check choco
+      run: choco list -l
+    - name: Try container
+      run: docker run --rm mcr.microsoft.com/windows/nanoserver:1809 ipconfig
+    - name: Try Hyper-V container
+      run: docker run --rm --isolation=hyperv mcr.microsoft.com/windows/nanoserver:1809 ipconfig
+    - name: Install Docker Desktop
+      run: choco install -y docker-desktop
