@@ -10,7 +10,7 @@ jobs:
  
     steps:
     - uses: actions/checkout@v2
-    - name: Look around
-      run: set
     - name: Check choco
       run: choco list -l
+    - name: Install Docker Desktop
+      run: choco install -y docker-desktop
