@@ -16,3 +16,9 @@ jobs:
     - name: Look around
       run: printenv
       if: github.repository == 'StefanScherer/githubactionstest' && github.event_name == 'push'
+    - name: Build image
+      run: docker build -t ghcr.io/stefanscherer/githubactionstest:latest .
+    - name: Docker login
+      run: echo $CR_PAT | docker login ghcr.io -u StefanScherer --password-stdin
+    - name: Push to GHCR
+      run: docker push ghcr.io/stefanscherer/githubactionstest:latest
