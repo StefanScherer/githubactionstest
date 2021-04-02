@@ -12,9 +12,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Check choco
       run: choco list -l
-    - name: Try container
-      run: docker run --rm mcr.microsoft.com/windows/nanoserver:1809 ipconfig
-    - name: Try Hyper-V container
-      run: docker run --rm --isolation=hyperv mcr.microsoft.com/windows/nanoserver:1809 ipconfig
-    - name: Install Docker Desktop
-      run: choco install -y docker-desktop
+    - name: Build python image
+      run: docker build -t python .
