@@ -1,14 +1,76 @@
-FROM golang AS build
+FROM mcr.microsoft.com/windows/servercore:ltsc2016
 
-COPY . /code
-WORKDIR /code
+SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-RUN CGO_ENABLED=0 go build -a -installsuffix cgo http.go
+# https://github.com/docker-library/python/pull/557
+ENV PYTHONIOENCODING UTF-8
 
-FROM scratch
+ENV PYTHON_VERSION 3.9.2
+ENV PYTHON_RELEASE 3.9.2
 
-COPY --from=build /code/http /http
+RUN $url = ('https://www.python.org/ftp/python/{0}/python-{1}-amd64.exe' -f $env:PYTHON_RELEASE, $env:PYTHON_VERSION); \
+	Write-Host ('Downloading {0} ...' -f $url); \
+	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+	Invoke-WebRequest -Uri $url -OutFile 'python.exe'; \
+	\
+	Write-Host 'Installing ...'; \
+# https://docs.python.org/3/using/windows.html#installing-without-ui
+	$exitCode = (Start-Process python.exe -Wait -NoNewWindow -PassThru \
+		-ArgumentList @( \
+			'/quiet', \
+			'InstallAllUsers=1', \
+			'TargetDir=C:\Python', \
+			'PrependPath=1', \
+			'Shortcuts=0', \
+			'Include_doc=0', \
+			'Include_pip=0', \
+			'Include_test=0' \
+		) \
+	).ExitCode; \
+	if ($exitCode -ne 0) { \
+		Write-Host ('Running python installer failed with exit code: {0}' -f $exitCode); \
+		Get-ChildItem $env:TEMP | Sort-Object -Descending -Property LastWriteTime | Select-Object -First 1 | Get-Content; \
+		exit $exitCode; \
+	} \
+	\
+# the installer updated PATH, so we should refresh our local value
+	$env:PATH = [Environment]::GetEnvironmentVariable('PATH', [EnvironmentVariableTarget]::Machine); \
+	\
+	Write-Host 'Verifying install ...'; \
+	Write-Host '  python --version'; python --version; \
+	\
+	Write-Host 'Removing ...'; \
+	Remove-Item python.exe -Force; \
+	Remove-Item $env:TEMP/Python*.log -Force; \
+	\
+	Write-Host 'Complete.'
 
-EXPOSE 8080
+# if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
+ENV PYTHON_PIP_VERSION 21.0.1
+# https://github.com/pypa/get-pip
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/29f37dbe6b3842ccd52d61816a3044173962ebeb/public/get-pip.py
+ENV PYTHON_GET_PIP_SHA256 e03eb8a33d3b441ff484c56a436ff10680479d4bd14e59268e67977ed40904de
 
-CMD ["/http"]
+RUN Write-Host ('Downloading get-pip.py ({0}) ...' -f $env:PYTHON_GET_PIP_URL); \
+	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+	Invoke-WebRequest -Uri $env:PYTHON_GET_PIP_URL -OutFile 'get-pip.py'; \
+	Write-Host ('Verifying sha256 ({0}) ...' -f $env:PYTHON_GET_PIP_SHA256); \
+	if ((Get-FileHash 'get-pip.py' -Algorithm sha256).Hash -ne $env:PYTHON_GET_PIP_SHA256) { \
+		Write-Host 'FAILED!'; \
+		exit 1; \
+	}; \
+	\
+	Write-Host ('Installing pip=={0} ...' -f $env:PYTHON_PIP_VERSION); \
+	python get-pip.py \
+		--disable-pip-version-check \
+		--no-cache-dir \
+		('pip=={0}' -f $env:PYTHON_PIP_VERSION) \
+	; \
+	Remove-Item get-pip.py -Force; \
+	\
+	Write-Host 'Verifying pip install ...'; \
+	pip --version; \
+	\
+	Write-Host 'Complete.'
+
+CMD ["python"]
