@@ -13,7 +13,7 @@ jobs:
  
     steps:
     - uses: actions/checkout@v2
-    - name: Check choco
-      run: choco list -l
+    - name: Docker version
+      run: docker version
     - name: Build python image
       run: docker build -t python .
